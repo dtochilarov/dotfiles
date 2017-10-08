@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Exit if any command returns a non-zero code.
-set +e
+set -e
 
 # Get the repo folder
 REPO=$(dirname $0)
@@ -32,7 +32,7 @@ echo "(Old bash config files are backed up in ${BACKUPS})"
 ### Configure VIM
 
 # Assert vim is installed ("set -e" will abort if it isn't)
-vim --version > /dev/null
+vim --version
 
 # Copy .vimrc
 VIMRC_NAME="vimrc"
