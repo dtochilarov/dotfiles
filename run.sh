@@ -52,7 +52,17 @@ curl --create-dirs -o "${HOME}/.vim/autoload/plug.vim" \
 # Create a folder for the plugins
 mkdir "${HOME}/.vim/plugged"
 
-# Install plugins
-ex +PlugInstall +qall
+# Create a temporary vimrc containing only the plugins from the original
+# vimrc. This is required because VIM will complain as soon as it starts
+# that plugins are not available.
+TMP_VIMRC_NAME="tmp_vimrc"
+sed -n "/^call plug#begin/,/^call plug#end/p" \
+    "${REPO}/vimrc/${VIMRC_NAME}" > "${REPO}/vimrc/${TMP_VIMRC_NAME}"
+
+# Install plugins using the temporary vimrc
+vim -u "${REPO}/vimrc/${TMP_VIMRC_NAME}" +PlugInstall +qall
+# Remove the temp file
+rm "${REPO}/vimrc/${TMP_VIMRC_NAME}"
+# Confirm it is all good!
 echo "VIM config files deployed"
 
