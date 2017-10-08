@@ -2,5 +2,17 @@ dist: trusty
 
 sudo: false
 
-script: ./run.sh
+script:
+    - ./run.sh
+    - ./package.sh
 
+deploy:
+    provider: releases
+    api_key: $GITHUB_API_KEY
+    file: dotfiles.tar.gz
+    skip_cleanup: true
+    on:
+        tags: true
+
+notifications:
+    email: false
