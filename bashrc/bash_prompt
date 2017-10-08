@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+
+if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
+	export TERM='gnome-256color';
+elif infocmp xterm-256color >/dev/null 2>&1; then
+	export TERM='xterm-256color';
+fi;
+
+
+### FORMATS & COLOURS
+RESET="\[\e[0m\]";
+# BLACK="\[\e[38;5;0m\]";
+# RED="\[\e[38;5;1m\]";
+# GREEN="\[\e[38;5;2m\]";
+# YELLOW="\[\e[38;5;3m\]";
+# BLUE="\[\e[38;5;4m\]";
+# MAGENTA="\[\e[38;5;5m\]";
+# CYAN="\[\e[38;5;6m\]";
+LIGHT_GRAY="\[\e[38;5;7m\]";
+DARK_GRAY="\[\e[38;5;8m\]";
+LIGHT_RED="\[\e[38;5;9m\]";
+LIGHT_GREEN="\[\e[38;5;10m\]";
+LIGHT_YELLOW="\[\e[38;5;11m\]";
+# LIGHT_BLUE="\[\e[38;5;12m\]";
+LIGHT_MAGENTA="\[\e[38;5;13m\]";
+# LIGHT_CYAN="\[\e[38;5;14m\]";
+WHITE="\[\e[38;5;15m\]";
+
+
+### Delimiters
+LB="${DARK_GRAY}("
+RB="${DARK_GRAY})"
+
+
+### Delimiter Line
+function prompt_delimiter_line () {
+    local line=""
+    for i in $(seq $COLUMNS);
+    do
+        line+="_"
+    done
+    line+="\n"
+    echo $line
+}
+
+
+### Command line
+function prompt_line_number () {
+    echo "${LB}${LIGHT_MAGENTA}\#${RB}"
+}
+
+
+### Time
+function prompt_time () {
+    echo "${LB}${LIGHT_GRAY}\t${RB}"
+}
+
+
+### User and host
+function prompt_user_host () {
+    echo "${LB}${LIGHT_GRAY}\u@\h${RB}"
+}
+
+
+### Working directory
+function prompt_working_directory () {
+    echo "${LB}${LIGHT_YELLOW}\w${RB}"
+}
+
+
+### Git branch
+function prompt_git () {
+    local git_label=''
+
+    git_label=$(git symbolic-ref --quiet --short HEAD 2>/dev/null)
+    if [ $? -eq 0 ]
+    then
+        echo "${LB}${LIGHT_GREEN}${git_label}${RB}"
+        return
+    fi
+
+    git_label=$(git rev-parse --short HEAD 2>/dev/null)
+    if [ $? -eq 0 ]
+    then
+        echo "${LB}${LIGHT_RED}${git_label}${RB}"
+        return
+    fi
+}
+
+
+### Python venv
+function prompt_venv () {
+    if [ -z $VIRTUAL_ENV ]
+    then
+        return
+    else
+        echo "${LB}${LIGHT_GRAY}$(basename $VIRTUAL_ENV)${RB}"
+    fi
+}
+
+
+### UID
+function prompt_uid () {
+    echo "${WHITE}\$${RESET} "
+}
+
+
+### Contruct the prompt
+function prompt_command () {
+    local prompt=""
+    prompt+="$(prompt_delimiter_line)"
+    prompt+="$(prompt_line_number)"
+    prompt+="$(prompt_time)"
+    prompt+="$(prompt_user_host)"
+    prompt+="$(prompt_working_directory)"
+    prompt+="$(prompt_git)"
+    prompt+="\n"
+    prompt+="$(prompt_venv)"
+    prompt+="$(prompt_uid)"
+    PS1="${prompt}"
+}
+
+
+PROMPT_COMMAND=prompt_command
+

@@ -1,0 +1,133 @@
+" Remap Leader
+let mapleader=","   " leader is ,
+
+" Plugins
+" Specify a directory for plugins
+call plug#begin('~/.vim/plugged')
+
+" Infamous Nerdtree
+Plug 'scrooloose/nerdtree'
+
+" highlight indentation level
+Plug 'Yggdroot/indentLine'
+
+" Argument wrapper
+Plug 'FooSoft/vim-argwrap'
+
+" NerdCommenter
+Plug 'scrooloose/nerdcommenter'
+
+" brackets and quotes made simple
+Plug 'tpope/vim-surround'
+
+" GitGutter
+Plug 'airblade/vim-gitgutter'
+
+" Colour Theme - Papercolor
+Plug 'NLKNguyen/papercolor-theme'
+
+" Python syntax++
+Plug 'hdima/python-syntax'
+
+" Initialize plugin system
+call plug#end()
+
+" line numbers
+set number
+set relativenumber
+
+" Better python syntax highlighting via hdima/python-syntax
+let python_highlight_all = 1
+
+" Color scheme
+let g:PaperColor_Theme_Options = {
+\   'language': {
+\       'python': {
+\           'highlight_builtins' : 1,
+\       },
+\       'c': {
+\           'highlight_builtins' : 1
+\       },
+\       'cpp': {
+\           'highlight_standard_library': 1
+\       },
+\   }
+\ }
+
+set background=dark
+colorscheme PaperColor
+syntax on
+
+" Tabs
+set tabstop=4 		" number of visual spaces per TAB
+set softtabstop=4	" number of spaces to insert per TAB hit
+set shiftwidth=4    " indenting shifts
+set expandtab		" convert tabs to spaces
+set smarttab        " distinguish between a space and 4 spaces (a tab)
+
+" UI tweaks
+set showcmd		    " show command in bottom bar
+set cursorline 		" highlight current line
+filetype indent on	" load custom indent files from .vim/indent
+set wildmenu		" visual autocomplete for command menu
+set lazyredraw      " only redraw if you have to
+set showmatch       " highlight matchin ([{}])
+
+" Searching
+set incsearch       " search as characters are entered
+set hlsearch        " highlight matches
+set smartcase       " smart case sensitivity during search
+
+" Highlight word under cursor
+let g:highlighting = 0
+function! Highlighting()
+    if g:highlighting == 1 && @/ =~ '^\\<'.expand('<cword>').'\\>$'
+        let g:highlighting = 0
+        return ":silent nohlsearch\<CR>"
+    endif
+    let @/ = '\<'.expand('<cword>').'\>'
+    let g:highlighting = 1
+    return ":silent set hlsearch\<CR>"
+endfunction
+nnoremap <silent> <expr> <CR> Highlighting()
+
+" Scrolling
+nnoremap <C-j> jzz
+nnoremap <C-k> kzz
+
+" Tab switching
+nnoremap <C-l> gt
+nnoremap <C-h> gT
+
+" Folding
+set foldenable      " enables folding
+set foldlevelstart=1    " open most folds by default
+set foldnestmax=2   " max number of nested folds
+" open/close folds
+nnoremap <space> za
+set foldmethod=indent " fold based on indentation
+" Change the fold color to gray
+highlight Folded ctermbg=236
+highlight Folded ctermfg=gray
+
+" Colour the 80 an 90 char boundary column
+set colorcolumn=80,90
+
+" Remove all white space on save
+autocmd BufWritePre * %s/\s\+$//e
+
+" Arg Wrapper
+nnoremap <leader>a :ArgWrap<CR>
+
+" Git gutter
+let g:gitgutter_sign_added='+'
+let g:gitgutter_sign_modified = '!'
+let g:gitgutter_sign_removed = '_'
+let g:gitgutter_sign_removed_first_line = '^'
+let g:gitgutter_sign_modified_removed = '!'
+
+highlight GitGutterAdd cterm=bold ctermfg=green ctermbg=236
+highlight GitGutterChange cterm=bold ctermfg=yellow ctermbg=236
+highlight GitGutterDelete cterm=bold ctermfg=red ctermbg=236
+highlight GitGutterChangeDelete cterm=bold ctermfg=yellow ctermbg=236
+

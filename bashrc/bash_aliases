@@ -1,0 +1,9 @@
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+alias l='ls -lF'
+alias ll='ls -alF'
+alias cc='cd ..'
+
+alias rubber='rubber -d'
+
