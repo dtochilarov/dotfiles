@@ -1,6 +1,9 @@
 " Remap Leader
 let mapleader=","   " leader is ,
 
+" Look for and write swapfiles in ~/.vim/swap/ (^ means prepend)
+set directory^=$HOME/.vim/swap//
+
 " Plugins
 " Specify a directory for plugins
 call plug#begin('~/.vim/plugged')
@@ -29,12 +32,18 @@ Plug 'NLKNguyen/papercolor-theme'
 " Python syntax++
 Plug 'hdima/python-syntax'
 
+" Supertab
+Plug 'ervandew/supertab'
+
 " Initialize plugin system
 call plug#end()
 
 " line numbers
 set number
 set relativenumber
+
+" tabcomplete down
+let g:SuperTabDefaultCompletionType = "<c-n>"
 
 " Better python syntax highlighting via hdima/python-syntax
 let python_highlight_all = 1
@@ -57,6 +66,10 @@ let g:PaperColor_Theme_Options = {
 set background=dark
 colorscheme PaperColor
 syntax on
+
+" Comments
+set formatoptions+=c
+set formatoptions-=ro
 
 " Tabs
 set tabstop=4 		" number of visual spaces per TAB
@@ -91,6 +104,10 @@ function! Highlighting()
 endfunction
 nnoremap <silent> <expr> <CR> Highlighting()
 
+" Mouse
+set ttymouse=xterm2
+set mouse=a
+
 " Scrolling
 nnoremap <C-j> jzz
 nnoremap <C-k> kzz
@@ -111,10 +128,14 @@ highlight Folded ctermbg=236
 highlight Folded ctermfg=gray
 
 " Colour the 80 an 90 char boundary column
-set colorcolumn=80,90
+set colorcolumn=120
 
 " Remove all white space on save
 autocmd BufWritePre * %s/\s\+$//e
+
+" NERDTree shortcut
+map <C-n> :NERDTreeToggle<CR>
+let NERDTreeIgnore = ['\.pyc$']
 
 " Arg Wrapper
 nnoremap <leader>a :ArgWrap<CR>
@@ -131,3 +152,14 @@ highlight GitGutterChange cterm=bold ctermfg=yellow ctermbg=236
 highlight GitGutterDelete cterm=bold ctermfg=red ctermbg=236
 highlight GitGutterChangeDelete cterm=bold ctermfg=yellow ctermbg=236
 
+" NERDCommenter
+" Use compact syntax for prettified multi-line comments
+let g:NERDCompactSexyComs=1
+" Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDDefaultAlign='left'
+
+"nnoremap <BS> gT
+set t_ut=
+
+" Enable markdown syntax highlighting for *.md files
+au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
